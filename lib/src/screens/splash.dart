@@ -9,11 +9,11 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       routes: {
-        // '/login': (context) => LoginPage(),
+        // '/login': (context) => LoginPage(), teuing lieur bro
       },
-      home: const SplashScreen(),
+      home: SplashScreen(),
     );
   }
 }
@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-      const Duration(seconds: 3),
+      const Duration(seconds: 0),
       () {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const LoginPage()));

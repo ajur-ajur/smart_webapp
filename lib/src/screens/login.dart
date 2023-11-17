@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smart_webapp/src/functions/lgoin_wave.dart';
+import 'package:smart_webapp/src/functions/account_list.dart';
+import 'package:smart_webapp/src/functions/login_wave.dart';
 import 'package:smart_webapp/src/functions/login_dialog.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
@@ -12,10 +13,26 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  //Cek username dan password pake variabel ini
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  //Kalau ini buat tombol yang ngeliat password
   bool obscureText = true;
+
+  //Kalau ini pas gagal login (ngubah warna gitu loh)
+  bool failedAttempt = false;
   late double scaleFactor;
+
+  @override
+  void initState() {
+    super.initState();
+    // accountList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    accountList();
     return Scaffold(
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -105,6 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 15 * scaleFactor,
                             width: 100 * scaleFactor,
                             child: TextField(
+                              controller: usernameController,
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
@@ -136,6 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 15 * scaleFactor,
                             width: 100 * scaleFactor,
                             child: TextField(
+                              controller: passwordController,
                               obscureText: obscureText,
                               decoration: InputDecoration(
                                 suffixIcon: IconButton(
@@ -189,7 +208,13 @@ class _LoginPageState extends State<LoginPage> {
                                 shadowColor: Colors.transparent,
                               ),
                               onPressed: () {
-                                _showLoginDialog(context, scaleFactor);
+                                if (usernameController.text == 'user' &&
+                                    passwordController.text == 'user') {
+                                  _showLoginDialog(context, scaleFactor);
+                                } else {
+                                  failedAttempt = true;
+                                  // print(accounts);
+                                }
                               },
                               child: Text(
                                 'Log in',

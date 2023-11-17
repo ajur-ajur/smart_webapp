@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+///Warna proyek
 abstract final class LightTheme {
   static const Color washedCyan = Color(0xFFDDF0F6);
   static const Color primacCyan = Color(0xFF40B6DD);
