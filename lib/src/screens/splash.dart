@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
           return Center(
             child: Image.asset(
-              'images/tubi.png',
+              'assets/images/tubi.png',
               width: 100 * scaleFactor,
               height: 100 * scaleFactor,
             ),

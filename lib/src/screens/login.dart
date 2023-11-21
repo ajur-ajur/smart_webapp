@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                           .regularStyle,
                     ),
                     Image.asset(
-                      '/images/tubi.png',
+                      'assets/images/tubi.png',
                       width: 30 * scaleFactor,
                     ),
                   ],
@@ -192,37 +192,47 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           SizedBox(height: 3 * scaleFactor),
-                          SizedBox(
-                            height: 10 * scaleFactor,
-                            width: 40 * scaleFactor,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(20.0 * scaleFactor),
-                                  side: BorderSide(
-                                      color: LightTheme.primacCyan,
-                                      width: 0.5 * scaleFactor),
+                          Row(
+                            children: [
+                              SizedBox(
+                                height: 10 * scaleFactor,
+                                width: 40 * scaleFactor,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          20.0 * scaleFactor),
+                                      side: BorderSide(
+                                          color: LightTheme.primacCyan,
+                                          width: 0.5 * scaleFactor),
+                                    ),
+                                    backgroundColor: LightTheme.primacCyan,
+                                    shadowColor: Colors.transparent,
+                                  ),
+                                  onPressed: () {
+                                    if (usernameController.text == 'user' &&
+                                        passwordController.text == 'user') {
+                                      failedAttempt = false;
+                                      _showLoginDialog(
+                                          context, scaleFactor, failedAttempt);
+                                    } else {
+                                      failedAttempt = true;
+                                      _showLoginDialog(
+                                          context, scaleFactor, failedAttempt);
+                                    }
+                                  },
+                                  child: Text(
+                                    'Log in',
+                                    style: ButtonLink(4 * scaleFactor,
+                                            LightTheme.themeWhite)
+                                        .regularStyle,
+                                  ),
                                 ),
-                                backgroundColor: LightTheme.primacCyan,
-                                shadowColor: Colors.transparent,
                               ),
-                              onPressed: () {
-                                if (usernameController.text == 'user' &&
-                                    passwordController.text == 'user') {
-                                  _showLoginDialog(context, scaleFactor);
-                                } else {
-                                  failedAttempt = true;
-                                  // print(accounts);
-                                }
-                              },
-                              child: Text(
-                                'Log in',
-                                style: ButtonLink(
-                                        4 * scaleFactor, LightTheme.themeWhite)
-                                    .regularStyle,
+                              SizedBox(
+                                width: 5 * scaleFactor,
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
@@ -237,14 +247,26 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _showLoginDialog(BuildContext context, double scaleFactor) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return LoginDialog(
-          scaleFactor: scaleFactor,
-        );
-      },
-    );
+  void _showLoginDialog(
+      BuildContext context, double scaleFactor, bool failedAttempt) {
+    if (failedAttempt == false) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return LoginDialog(
+            scaleFactor: scaleFactor,
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return FailedLoginDialog(
+            scaleFactor: scaleFactor,
+          );
+        },
+      );
+    }
   }
 }

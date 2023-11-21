@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "367173214250",
+    "project_id": "tubescc2023",
+    "storage_bucket": "tubescc2023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367173214250:android:bebedc75dc05a73065a353",
+        "android_client_info": {
+          "package_name": "com.example.smart_webapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQVN21_oYFL69Qs_kjkw9Obo2eJzAXN1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
