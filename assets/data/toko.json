@@ -1,0 +1,12 @@
+{
+  "toko": [
+    {
+      "nama": "Kelontongan",
+      "kode_unik": 123123123
+    },
+    {
+        "nama": "Toko Beras",
+        "kode_unik": 321321321
+    }
+  ]
+}

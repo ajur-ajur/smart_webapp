@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:smart_webapp/src/functions/account_list.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smart_webapp/src/functions/login_wave.dart';
 import 'package:smart_webapp/src/functions/login_dialog.dart';
+import 'package:smart_webapp/src/screens/splash.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
 
@@ -20,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   //Kalau ini buat tombol yang ngeliat password
   bool obscureText = true;
 
-  //Kalau ini pas gagal login (ngubah warna gitu loh)
+  //Kalau ini pas gagal login (dialog popupnya beda)
   bool failedAttempt = false;
   late double scaleFactor;
 
@@ -32,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    accountList();
     return Scaffold(
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -209,16 +209,35 @@ class _LoginPageState extends State<LoginPage> {
                                     backgroundColor: LightTheme.primacCyan,
                                     shadowColor: Colors.transparent,
                                   ),
-                                  onPressed: () {
-                                    if (usernameController.text == 'user' &&
-                                        passwordController.text == 'user') {
-                                      failedAttempt = false;
-                                      _showLoginDialog(
-                                          context, scaleFactor, failedAttempt);
-                                    } else {
-                                      failedAttempt = true;
-                                      _showLoginDialog(
-                                          context, scaleFactor, failedAttempt);
+                                  onPressed: () async {
+                                    final BuildContext currentContext = context;
+
+                                    try {
+                                      final credential = await FirebaseAuth
+                                          .instance
+                                          .signInWithEmailAndPassword(
+                                        email: usernameController.text,
+                                        password: passwordController.text,
+                                      );
+
+                                      // If the sign-in is successful, navigate to another page
+                                      if (credential.user != null) {
+                                        // Use the captured context for navigation
+                                        Navigator.pushReplacement(
+                                          currentContext,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SplashScreen(), // Replace HomeScreen with your desired screen
+                                          ),
+                                        );
+                                      }
+                                    } on FirebaseAuthException catch (e) {
+                                      if (e.code == 'user-not-found') {
+                                        print('User not found');
+                                      } else if (e.code == 'wrong-password') {
+                                        print(
+                                            'Wrong password provided for that user.');
+                                      }
                                     }
                                   },
                                   child: Text(

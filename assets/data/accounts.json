@@ -1,20 +1,22 @@
 {
-    "accounts": [
-      {
-        "email": "user1@example.com",
-        "password": "#user1",
-        "name": "Udin Hammerhead"
-      },
-      {
-        "email": "user2@example.com",
-        "password": "#user2",
-        "name": "Yayan Suryana"
-      },
-      {
-        "email": "user3@example.com",
-        "password": "#user3",
-        "name": "Asep Saepudin"
-      }
-    ]
-  }
-  
+  "accounts": [
+    {
+      "email": "user1@example.com",
+      "username": "udin",
+      "password": "#user1",
+      "name": "Udin Hammerhead"
+    },
+    {
+      "email": "user2@example.com",
+      "username": "yayan",
+      "password": "#user2",
+      "name": "Yayan Suryana"
+    },
+    {
+      "email": "user3@example.com",
+      "username": "asep",
+      "password": "#user3",
+      "name": "Asep Saepudin"
+    }
+  ]
+}
