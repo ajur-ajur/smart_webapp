@@ -13,7 +13,7 @@ void main() {
     'SplashScreen presence test',
     (WidgetTester tester) async {
       // Build our app and trigger a frame.
-      await tester.pumpWidget(const Splash());
+      await tester.pumpWidget(const SplashScreen());
 
       // Verify the presence of the SplashScreen widget.
       expect(find.byType(SplashScreen), findsOneWidget);
