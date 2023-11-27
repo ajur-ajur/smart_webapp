@@ -21,11 +21,20 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for android - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -45,37 +54,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyAxH-Ku3yhLZCqXGWAjy6cJsyWOx8BZSz0',
-    appId: '1:367173214250:web:70bc4b0df28ba2e265a353',
+    appId: '1:367173214250:web:0736e635dc098e3265a353',
     messagingSenderId: '367173214250',
     projectId: 'tubescc2023',
     authDomain: 'tubescc2023.firebaseapp.com',
     storageBucket: 'tubescc2023.appspot.com',
-    measurementId: 'G-4QCP9VMMM2',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBQVN21_oYFL69Qs_kjkw9Obo2eJzAXN1s',
-    appId: '1:367173214250:android:bebedc75dc05a73065a353',
-    messagingSenderId: '367173214250',
-    projectId: 'tubescc2023',
-    storageBucket: 'tubescc2023.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD8NF6BDSlviHPj17wcZAUSG6zW19_6a-0',
-    appId: '1:367173214250:ios:84fd080cc3525cdd65a353',
-    messagingSenderId: '367173214250',
-    projectId: 'tubescc2023',
-    storageBucket: 'tubescc2023.appspot.com',
-    iosBundleId: 'com.example.smartWebapp',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyD8NF6BDSlviHPj17wcZAUSG6zW19_6a-0',
-    appId: '1:367173214250:ios:641f1ad642d45bcf65a353',
-    messagingSenderId: '367173214250',
-    projectId: 'tubescc2023',
-    storageBucket: 'tubescc2023.appspot.com',
-    iosBundleId: 'com.example.smartWebapp.RunnerTests',
+    measurementId: 'G-4J81H5D7E0',
   );
 }

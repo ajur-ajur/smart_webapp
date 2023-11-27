@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:smart_webapp/src/functions/auth.dart';
 import 'package:smart_webapp/src/functions/login_wave.dart';
 import 'package:smart_webapp/src/functions/login_dialog.dart';
-import 'package:smart_webapp/src/screens/splash.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
 
@@ -14,9 +16,30 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //Cek username dan password pake variabel ini
-  TextEditingController usernameController = TextEditingController();
+  //Cek email dan password pake variabel ini
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  String? errorMessage = '';
+  bool isLogin = false;
+
+  Future<void> signInWithEmailAndPassword() async {
+    try {
+      await Auth().signInWithEmailPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      isLogin = true;
+      // print(isLogin);
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+        // print(errorMessage);
+      });
+      isLogin = false;
+      // print(isLogin);
+    }
+  }
 
   //Kalau ini buat tombol yang ngeliat password
   bool obscureText = true;
@@ -26,14 +49,9 @@ class _LoginPageState extends State<LoginPage> {
   late double scaleFactor;
 
   @override
-  void initState() {
-    super.initState();
-    // accountList();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: LightTheme.themeWhite,
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           double screenWidth = MediaQuery.of(context).size.width;
@@ -113,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 5 * scaleFactor,
                           ),
                           Text(
-                            'Username',
+                            'Email',
                             style: ButtonLink(
                                     6 * scaleFactor, LightTheme.primacCyan)
                                 .regularStyle,
@@ -122,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 15 * scaleFactor,
                             width: 100 * scaleFactor,
                             child: TextField(
-                              controller: usernameController,
+                              controller: emailController,
                               decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
@@ -210,35 +228,11 @@ class _LoginPageState extends State<LoginPage> {
                                     shadowColor: Colors.transparent,
                                   ),
                                   onPressed: () async {
-                                    final BuildContext currentContext = context;
-
-                                    try {
-                                      final credential = await FirebaseAuth
-                                          .instance
-                                          .signInWithEmailAndPassword(
-                                        email: usernameController.text,
-                                        password: passwordController.text,
-                                      );
-
-                                      // If the sign-in is successful, navigate to another page
-                                      if (credential.user != null) {
-                                        // Use the captured context for navigation
-                                        Navigator.pushReplacement(
-                                          currentContext,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                SplashScreen(), // Replace HomeScreen with your desired screen
-                                          ),
-                                        );
-                                      }
-                                    } on FirebaseAuthException catch (e) {
-                                      if (e.code == 'user-not-found') {
-                                        print('User not found');
-                                      } else if (e.code == 'wrong-password') {
-                                        print(
-                                            'Wrong password provided for that user.');
-                                      }
-                                    }
+                                    await signInWithEmailAndPassword();
+                                    isLogin
+                                        ? _showLoginDialog(
+                                            scaleFactor, failedAttempt)
+                                        : null;
                                   },
                                   child: Text(
                                     'Log in',
@@ -266,26 +260,25 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _showLoginDialog(
-      BuildContext context, double scaleFactor, bool failedAttempt) {
-    if (failedAttempt == false) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return LoginDialog(
-            scaleFactor: scaleFactor,
-          );
-        },
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return FailedLoginDialog(
-            scaleFactor: scaleFactor,
-          );
-        },
-      );
-    }
+  void _showLoginDialog(double scaleFactor, bool failedAttempt) {
+    // if (failedAttempt == false) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return LoginDialog(
+          scaleFactor: scaleFactor,
+        );
+      },
+    );
+    //   } else {
+    //     showDialog(
+    //       context: context,
+    //       builder: (BuildContext context) {
+    //         return FailedLoginDialog(
+    //           scaleFactor: scaleFactor,
+    //         );
+    //       },
+    //     );
+    //   }
   }
 }

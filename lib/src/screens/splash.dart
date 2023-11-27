@@ -1,25 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:smart_webapp/src/screens/dashboard.dart';
 import 'package:smart_webapp/src/screens/login.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 
-class Splash extends StatelessWidget {
-  const Splash({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      routes: {
-        // '/login': (context) => LoginPage(), teuing lieur bro
-      },
-      home: SplashScreen(),
-    );
-  }
-}
-
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -32,10 +19,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-      const Duration(seconds: 0),
+      const Duration(seconds: 1),
       () {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const LoginPage()));
+            MaterialPageRoute(builder: (context) => const Dashboard()));
       },
     );
   }

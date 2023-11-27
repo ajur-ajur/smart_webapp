@@ -4,8 +4,7 @@ import 'package:smart_webapp/src/settings/color_theme.dart';
 class CustomWaveShape extends StatelessWidget {
   final double scaleFactor;
 
-  const CustomWaveShape({Key? key, required this.scaleFactor})
-      : super(key: key);
+  const CustomWaveShape({super.key, required this.scaleFactor});
 
   @override
   Widget build(BuildContext context) {
