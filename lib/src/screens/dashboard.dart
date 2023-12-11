@@ -35,41 +35,11 @@ class _DashboardState extends State<Dashboard> {
         scaleFactor: scaleFactor,
       ),
       body: Padding(
-          padding: const EdgeInsets.fromLTRB(80, 15, 80, 15),
-          child: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image.asset('/images/quebag.png'),
-                      Column(
-                        children: [
-                          Text(
-                            'Keranjang Kosong!',
-                            style:
-                                ButtonLink(6 * scaleFactor, LightTheme.darkCyan)
-                                    .boldStyle,
-                          ),
-                          SizedBox(
-                            width: screenWidth * 0.15,
-                            child: Text(
-                              'Silahkan memasukkan barang belanjaan Anda ke dalam SmartCart!',
-                              style: ButtonLink(
-                                      4 * scaleFactor, LightTheme.darkCyan)
-                                  .regularStyle,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          )),
+        padding: const EdgeInsets.fromLTRB(80, 15, 80, 15),
+        child: Column(children: [
+          if (barang.isEmpty) const EmptyCart() else ListProduk(barang: barang)
+        ]),
+      ),
       drawer: Drawer(
         width: screenWidth * 0.25,
         child: ListView(
