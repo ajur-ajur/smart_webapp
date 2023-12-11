@@ -8,4 +8,5 @@ abstract final class LightTheme {
   static const Color themeWhite = Color(0xFFF4F9FB);
   static const Color themeBlack = Color(0xFF000000);
   static const Color scaffoldWhite = Color(0xFAFAFAFF);
+  static const Color darkCyan = Color(0xFF243956);
 }

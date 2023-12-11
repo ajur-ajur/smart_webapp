@@ -22,7 +22,7 @@ class _ListProdukState extends State<ListProduk> {
         return ListTile(
           visualDensity: VisualDensity(vertical: 0.001),
           tileColor: LightTheme.scaffoldWhite,
-          leading: Icon(
+          leading: const Icon(
             Icons.shopping_bag,
             color: LightTheme.deepCyan,
           ),
@@ -31,7 +31,7 @@ class _ListProdukState extends State<ListProduk> {
             style: HeadLine(12 * scalefactor, LightTheme.primacCyan).boldStyle,
           ),
           subtitle: Text(
-            'Rp. ${widget.barang[index].harga.toStringAsFixed(2)}',
+            'Rp. ${widget.barang[index].harga.toStringAsFixed(0)}',
             style:
                 ButtonLink(8 * scalefactor, LightTheme.themeBlack).regularStyle,
           ),
@@ -53,11 +53,3 @@ class Produk {
 
   Produk({required this.nama, required this.harga, required this.kode});
 }
-
-List<Produk> barang = [
-  Produk(nama: 'Pepsodent Herbal 190gr', harga: 25000, kode: '8999999710880'),
-  Produk(nama: 'Lifebuoy Merah 75 gr', harga: 4000, kode: '8999999059309'),
-  Produk(nama: 'Pepsodent Herbal 190gr', harga: 25000, kode: '8999999710880'),
-  Produk(nama: 'Pepsodent Herbal 190gr', harga: 25000, kode: '8999999710880'),
-  Produk(nama: 'Pepsodent Herbal 190gr', harga: 25000, kode: '8999999710880')
-];

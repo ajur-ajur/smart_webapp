@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:smart_webapp/src/functions/dash_appbar.dart';
 import 'package:smart_webapp/src/functions/dash_btmappbar.dart';
 import 'package:smart_webapp/src/functions/dash_listbuild.dart';
-import 'package:smart_webapp/src/functions/data_query.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -18,6 +17,9 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   late double hScaleFactor;
   late double scaleFactor;
+  double totalDuit = 0.0;
+
+  List<Produk> barang = [];
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +39,37 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             children: [
               Expanded(
-                child: ListProduk(barang: barang),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.asset('/images/quebag.png'),
+                      Column(
+                        children: [
+                          Text(
+                            'Keranjang Kosong!',
+                            style:
+                                ButtonLink(6 * scaleFactor, LightTheme.darkCyan)
+                                    .boldStyle,
+                          ),
+                          SizedBox(
+                            width: screenWidth * 0.15,
+                            child: Text(
+                              'Silahkan memasukkan barang belanjaan Anda ke dalam SmartCart!',
+                              style: ButtonLink(
+                                      4 * scaleFactor, LightTheme.darkCyan)
+                                  .regularStyle,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           )),
-      // appBar: AppBar(),
       drawer: Drawer(
         width: screenWidth * 0.25,
         child: ListView(
@@ -66,8 +94,8 @@ class _DashboardState extends State<Dashboard> {
                   left: screenWidth * 0.065,
                   top: screenHeight * 0.10,
                   child: CircleAvatar(
-                    child: Image.asset('assets/images/tubi.png'),
                     radius: 20 * scaleFactor,
+                    child: Image.asset('assets/images/tubi.png'),
                   ),
                 ),
                 Positioned(
@@ -81,8 +109,10 @@ class _DashboardState extends State<Dashboard> {
           ],
         ),
       ),
-      backgroundColor: LightTheme.washedCyan,
-      bottomNavigationBar: const CustomBtmAppBar(),
+      backgroundColor: const Color.fromARGB(255, 221, 240, 246),
+      bottomNavigationBar: CustomBtmAppBar(
+        totalDuit: hitungDuit(),
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: LightTheme.primacCyan,
         onPressed: () {
@@ -98,56 +128,87 @@ class _DashboardState extends State<Dashboard> {
 
   void updateList(List<Produk> newProduk) {
     setState(() {
-      barang = newProduk;
+      barang.addAll(newProduk);
     });
   }
-}
 
-Future<void> _showTextFieldDialog(
-    BuildContext context, double scaleFactor) async {
-  String textFieldValue = '';
+  double hitungDuit() {
+    double totalHarga = barang.fold<double>(
+        0, (double sum, Produk produk) => sum + produk.harga);
 
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Cari Produk'),
-        content: TextField(
-          cursorColor: LightTheme.primacCyan,
-          onChanged: (value) {
-            textFieldValue = value;
-          },
-          decoration: const InputDecoration(
-            hintText: 'Ketik kode produk...',
-            focusColor: LightTheme.primacCyan,
-            hoverColor: LightTheme.primacCyan,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
+    setState(() {});
+
+    return totalHarga;
+  }
+
+  void _showTextFieldDialog(BuildContext context, double scaleFactor) async {
+    String textFieldValue = '';
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Cari Produk'),
+          content: TextField(
+            cursorColor: LightTheme.primacCyan,
+            onChanged: (value) {
+              textFieldValue = value;
             },
-            child: Text(
-              'Cancel',
-              style: ButtonLink(5 * scaleFactor, LightTheme.primacCyan)
-                  .regularStyle,
+            decoration: const InputDecoration(
+              hintText: 'Ketik kode produk...',
+              focusColor: LightTheme.primacCyan,
+              hoverColor: LightTheme.primacCyan,
             ),
           ),
-          TextButton(
-            onPressed: () {
-              print('Entered text: $textFieldValue');
-              dataSearchQuery(textFieldValue);
-              Navigator.pop(context);
-            },
-            child: Text(
-              'OK',
-              style: ButtonLink(5 * scaleFactor, LightTheme.primacCyan)
-                  .regularStyle,
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: ButtonLink(5 * scaleFactor, LightTheme.primacCyan)
+                    .regularStyle,
+              ),
             ),
-          ),
-        ],
-      );
-    },
-  );
+            TextButton(
+              onPressed: () {
+                dataSearchQuery(textFieldValue);
+                Navigator.pop(context);
+              },
+              child: Text(
+                'OK',
+                style: ButtonLink(5 * scaleFactor, LightTheme.primacCyan)
+                    .regularStyle,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  final db = FirebaseFirestore.instance;
+
+  Future<void> dataSearchQuery(String key) async {
+    final cariProduk =
+        db.collection('produk').where(FieldPath.documentId, isEqualTo: key);
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await cariProduk.get();
+
+      List<Produk> searchResults = querySnapshot.docs.map((documentSnapshot) {
+        Map<String, dynamic> data = documentSnapshot.data();
+        return Produk(
+          kode: documentSnapshot.id,
+          nama: data['Nama'],
+          harga: data['Harga'],
+        );
+      }).toList();
+
+      updateList(searchResults);
+    } catch (e) {
+      print(e);
+    }
+  }
 }

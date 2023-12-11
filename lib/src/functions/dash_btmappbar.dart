@@ -1,10 +1,13 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:smart_webapp/src/functions/data_query.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
 
 class CustomBtmAppBar extends StatefulWidget {
-  const CustomBtmAppBar({super.key});
+  double totalDuit;
+  CustomBtmAppBar({super.key, required this.totalDuit});
 
   @override
   State<CustomBtmAppBar> createState() => _CustomBtmAppBarState();
@@ -27,6 +30,7 @@ class _CustomBtmAppBarState extends State<CustomBtmAppBar> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Subtotal:',
@@ -34,7 +38,7 @@ class _CustomBtmAppBarState extends State<CustomBtmAppBar> {
                       .boldStyle,
                 ),
                 Text(
-                  'DUIT',
+                  "Rp. ${widget.totalDuit}",
                   style: ButtonLink(10 * scaleFactor, LightTheme.themeBlack)
                       .boldStyle,
                 )
@@ -50,7 +54,7 @@ class _CustomBtmAppBarState extends State<CustomBtmAppBar> {
                 child: Text('Coba cek'),
               ),
             ),
-            Text('data'),
+            Text('To Payment'),
           ],
         ),
       ),
