@@ -58,6 +58,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '367173214250',
     projectId: 'tubescc2023',
     authDomain: 'tubescc2023.firebaseapp.com',
+    databaseURL: 'https://tubescc2023-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'tubescc2023.appspot.com',
     measurementId: 'G-4J81H5D7E0',
   );

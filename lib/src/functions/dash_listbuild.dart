@@ -6,8 +6,13 @@ class Produk {
   final String nama;
   final double harga;
   final String kode;
+  int qty;
 
-  Produk({required this.nama, required this.harga, required this.kode});
+  Produk(
+      {required this.nama,
+      required this.harga,
+      required this.kode,
+      required this.qty});
 }
 
 class ListProduk extends StatefulWidget {
@@ -20,6 +25,7 @@ class ListProduk extends StatefulWidget {
 }
 
 class _ListProdukState extends State<ListProduk> {
+  String query = 'Cimory FM Cokelat 250 ml';
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -29,7 +35,7 @@ class _ListProdukState extends State<ListProduk> {
         itemCount: widget.barang.length,
         itemBuilder: (context, index) {
           return ListTile(
-            visualDensity: VisualDensity(vertical: 0.001),
+            visualDensity: const VisualDensity(vertical: 0.001),
             tileColor: LightTheme.scaffoldWhite,
             leading: const Icon(
               Icons.shopping_bag,
@@ -40,15 +46,24 @@ class _ListProdukState extends State<ListProduk> {
               style:
                   HeadLine(12 * scalefactor, LightTheme.primacCyan).boldStyle,
             ),
-            subtitle: Text(
-              'Rp. ${widget.barang[index].harga.toStringAsFixed(0)}',
-              style: ButtonLink(8 * scalefactor, LightTheme.themeBlack)
-                  .regularStyle,
+            subtitle: Row(
+              children: [
+                Text(
+                  'Rp. ${widget.barang[index].harga.toStringAsFixed(0)}',
+                  style: ButtonLink(8 * scalefactor, LightTheme.themeBlack)
+                      .regularStyle,
+                ),
+              ],
             ),
-            trailing: Text(
-              'Kode barang: ${widget.barang[index].kode}',
-              style: ButtonLink(4 * scalefactor, LightTheme.themeBlack)
-                  .regularStyle,
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Kode barang: ${widget.barang[index].kode}',
+                  style: ButtonLink(4 * scalefactor, LightTheme.themeBlack)
+                      .regularStyle,
+                ),
+              ],
             ),
           );
         },

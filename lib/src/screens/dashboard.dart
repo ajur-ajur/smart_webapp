@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_webapp/src/functions/dash_appbar.dart';
 import 'package:smart_webapp/src/functions/dash_btmappbar.dart';
@@ -173,6 +172,7 @@ class _DashboardState extends State<Dashboard> {
           kode: documentSnapshot.id,
           nama: data['Nama'],
           harga: data['Harga'],
+          qty: 1,
         );
       }).toList();
 

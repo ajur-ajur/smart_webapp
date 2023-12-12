@@ -31,6 +31,7 @@ class _CustomBtmAppBarState extends State<CustomBtmAppBar> {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'Subtotal:',
@@ -41,17 +42,17 @@ class _CustomBtmAppBarState extends State<CustomBtmAppBar> {
                   "Rp. ${widget.totalDuit}",
                   style: ButtonLink(10 * scaleFactor, LightTheme.themeBlack)
                       .boldStyle,
-                )
+                ),
               ],
             ),
             SizedBox(
-              width: 100,
-              height: 100,
+              width: 150,
+              height: 25,
               child: ElevatedButton(
                 onPressed: () async {
                   dataQuery();
                 },
-                child: Text('Coba cek'),
+                child: const Text('Cek Barang'),
               ),
             ),
             Text('To Payment'),
