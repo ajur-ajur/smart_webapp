@@ -1,13 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_webapp/main.dart';
 import 'package:smart_webapp/src/functions/dash_appbar.dart';
 import 'package:smart_webapp/src/functions/dash_btmappbar.dart';
+import 'package:smart_webapp/src/functions/dash_drawer.dart';
 import 'package:smart_webapp/src/functions/dash_listbuild.dart';
+import 'package:smart_webapp/src/functions/login_info.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final List<Pengguna> pengguna;
+  const Dashboard({super.key, required this.pengguna});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -30,57 +35,29 @@ class _DashboardState extends State<Dashboard> {
 
     return Scaffold(
       appBar: CustomAppbar(
+        pengguna: widget.pengguna,
         height: screenHeight * 0.15,
         scaleFactor: scaleFactor,
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(80, 15, 80, 15),
-        child: Column(children: [
-          if (barang.isEmpty) const EmptyCart() else ListProduk(barang: barang)
-        ]),
-      ),
-      drawer: Drawer(
-        width: screenWidth * 0.25,
-        child: ListView(
+        child: Column(
           children: [
-            Stack(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      color: LightTheme.primacCyan,
-                      width: double.maxFinite,
-                      height: screenHeight * 0.20,
-                    ),
-                    Container(
-                      color: LightTheme.themeWhite,
-                      width: double.maxFinite,
-                      height: double.maxFinite,
-                    ),
-                  ],
-                ),
-                Positioned(
-                  left: screenWidth * 0.065,
-                  top: screenHeight * 0.10,
-                  child: CircleAvatar(
-                    radius: 20 * scaleFactor,
-                    child: Image.asset('assets/images/tubi.png'),
-                  ),
-                ),
-                Positioned(
-                  //Nanti lagi
-                  top: screenHeight * 0.8,
-                  left: scaleFactor * 40,
-                  child: const Text('data'),
-                ),
-              ],
-            ),
+            if (barang.isEmpty)
+              const EmptyCart()
+            else
+              ListProduk(barang: barang)
           ],
         ),
       ),
-      backgroundColor: const Color.fromARGB(255, 221, 240, 246),
+      drawer: DashDrawer(
+          screenWidth: screenWidth,
+          screenHeight: screenHeight,
+          scaleFactor: scaleFactor),
+      backgroundColor: LightTheme.washedCyan,
       bottomNavigationBar: CustomBtmAppBar(
         totalDuit: hitungDuit(),
+        barang: barang,
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: LightTheme.primacCyan,
@@ -88,7 +65,7 @@ class _DashboardState extends State<Dashboard> {
           _showTextFieldDialog(context, scaleFactor);
         },
         child: const Icon(
-          Icons.search_outlined,
+          Icons.add_shopping_cart_rounded,
           color: LightTheme.scaffoldWhite,
         ),
       ),
@@ -117,14 +94,20 @@ class _DashboardState extends State<Dashboard> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Cari Produk'),
+          title: Text(
+            'Masukkan Produk',
+            style:
+                ButtonLink(6 * scaleFactor, LightTheme.themeBlack).regularStyle,
+          ),
           content: TextField(
             cursorColor: LightTheme.primacCyan,
             onChanged: (value) {
               textFieldValue = value;
             },
-            decoration: const InputDecoration(
-              hintText: 'Ketik kode produk...',
+            decoration: InputDecoration(
+              hintText: 'Ketik ID produk...',
+              hintStyle: ButtonLink(4 * scaleFactor, LightTheme.themeBlack)
+                  .regularStyle,
               focusColor: LightTheme.primacCyan,
               hoverColor: LightTheme.primacCyan,
             ),
@@ -166,19 +149,33 @@ class _DashboardState extends State<Dashboard> {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await cariProduk.get();
 
-      List<Produk> searchResults = querySnapshot.docs.map((documentSnapshot) {
-        Map<String, dynamic> data = documentSnapshot.data();
-        return Produk(
-          kode: documentSnapshot.id,
-          nama: data['Nama'],
-          harga: data['Harga'],
-          qty: 1,
-        );
-      }).toList();
+      List<Produk> searchResults = querySnapshot.docs.map(
+        (documentSnapshot) {
+          Map<String, dynamic> data = documentSnapshot.data();
+          return Produk(
+            kode: documentSnapshot.id,
+            nama: data['Nama'],
+            harga: data['Harga'],
+            qty: 1,
+          );
+        },
+      ).toList();
 
       updateList(searchResults);
     } catch (e) {
-      print(e);
+      logger.e(e);
+    }
+  }
+
+  void checkCurrentUser() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      logger.i('Logged user: ${user.uid}');
+    } else {
+      logger.i('No user is logged in');
     }
   }
 }

@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:smart_webapp/src/functions/login_info.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSize {
+  final List<Pengguna> pengguna;
+
   final double height;
   final double scaleFactor;
 
   final String namaToko = 'TB. Makmur Jaya'; //BAKALAN DI PULL DARI DB
-  final String namaUser = 'Yayan Suryana'; //BAKALAN DI PULL DARI DB
 
   const CustomAppbar(
-      {super.key, required this.height, required this.scaleFactor});
+      {super.key,
+      required this.height,
+      required this.scaleFactor,
+      required this.pengguna});
 
   @override
   Widget build(BuildContext context) {
+    final String namaUser =
+        pengguna.map((pengguna) => pengguna.namaLengkap).toString();
     return AppBar(
       surfaceTintColor: LightTheme.scaffoldWhite,
       backgroundColor: LightTheme.scaffoldWhite,
@@ -23,14 +29,22 @@ class CustomAppbar extends StatelessWidget implements PreferredSize {
       leading: GestureDetector(
         onTap: () {
           Scaffold.of(context).openDrawer();
-          print('tapped');
+          // print('tapped');
         },
-        child: CircleAvatar(
-          child: Image.asset(
-            'assets/images/tubi.png',
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: CircleAvatar(
+            backgroundColor: LightTheme.primacCyan,
+            radius: 150 * scaleFactor,
+            // child: Image.asset(
+            //   'assets/images/quebag.png',
+            // ),
+            child: Icon(
+              Icons.person_2_outlined,
+              color: LightTheme.themeWhite,
+              size: 10 * scaleFactor,
+            ),
           ),
-          maxRadius: 500,
-          minRadius: 100,
         ),
       ),
       title: Padding(
@@ -55,7 +69,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSize {
                       .boldStyle,
                 ),
                 Text(
-                  namaUser.toUpperCase(),
+                  namaUser.toUpperCase().replaceAll(RegExp('[^A-Z ]'), ''),
                   style: ButtonLink(10 * scaleFactor, LightTheme.primacCyan)
                       .regularStyle,
                 ),

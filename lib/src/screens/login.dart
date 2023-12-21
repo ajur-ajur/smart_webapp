@@ -16,7 +16,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //Cek email dan password pake variabel ini
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -227,13 +226,7 @@ class _LoginPageState extends State<LoginPage> {
                                     backgroundColor: LightTheme.primacCyan,
                                     shadowColor: Colors.transparent,
                                   ),
-                                  onPressed: () async {
-                                    await signInWithEmailAndPassword();
-                                    isLogin
-                                        ? _showLoginDialog(
-                                            scaleFactor, failedAttempt)
-                                        : null;
-                                  },
+                                  onPressed: loginMethod,
                                   child: Text(
                                     'Log in',
                                     style: ButtonLink(4 * scaleFactor,
@@ -260,13 +253,23 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _showLoginDialog(double scaleFactor, bool failedAttempt) {
+  void loginMethod() async {
+    await signInWithEmailAndPassword();
+    isLogin
+        ? _showLoginDialog(
+            scaleFactor, failedAttempt, emailController.text.trim())
+        : null;
+  }
+
+  void _showLoginDialog(
+      double scaleFactor, bool failedAttempt, String userEmail) {
     // if (failedAttempt == false) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return LoginDialog(
           scaleFactor: scaleFactor,
+          userEmail: userEmail,
         );
       },
     );

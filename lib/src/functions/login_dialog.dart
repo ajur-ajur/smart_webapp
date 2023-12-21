@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:smart_webapp/src/functions/login_info.dart';
 import 'package:smart_webapp/src/screens/dashboard.dart';
-import 'package:smart_webapp/src/screens/splash.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
 
 class LoginDialog extends StatefulWidget {
   final double scaleFactor;
-  const LoginDialog({super.key, required this.scaleFactor});
+  final String userEmail;
+  const LoginDialog(
+      {super.key, required this.scaleFactor, required this.userEmail});
 
   @override
   State<LoginDialog> createState() => _LoginDialogState();
 }
 
 class _LoginDialogState extends State<LoginDialog> {
+  List<Pengguna> pengguna = [];
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      surfaceTintColor: LightTheme.themeWhite,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0 * widget.scaleFactor),
       ),
@@ -54,14 +58,20 @@ class _LoginDialogState extends State<LoginDialog> {
                             width: 0.5 * widget.scaleFactor),
                       ),
                       backgroundColor: LightTheme.primacCyan,
-                      shadowColor: Colors.transparent,
+                      shadowColor: const Color.fromARGB(0, 146, 41, 41),
                     ),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Dashboard()),
-                      );
+                    onPressed: () async {
+                      pengguna = await InfoQuery.infoQuery(widget.userEmail);
+                      if (context.mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Dashboard(
+                              pengguna: pengguna,
+                            ),
+                          ),
+                        );
+                      }
                     },
                     child: Text(
                       'MULAI BELANJA',

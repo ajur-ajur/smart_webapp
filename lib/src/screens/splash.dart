@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:smart_webapp/src/screens/dashboard.dart';
 import 'package:smart_webapp/src/screens/login.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 
@@ -21,8 +20,12 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
       const Duration(seconds: 1),
       () {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const LoginPage()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginPage(),
+          ),
+        );
       },
     );
   }

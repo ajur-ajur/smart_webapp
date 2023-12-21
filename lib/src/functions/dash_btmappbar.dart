@@ -1,13 +1,16 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:smart_webapp/src/functions/dash_listbuild.dart';
 import 'package:smart_webapp/src/functions/data_query.dart';
+import 'package:smart_webapp/src/screens/review.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
 
 class CustomBtmAppBar extends StatefulWidget {
   double totalDuit;
-  CustomBtmAppBar({super.key, required this.totalDuit});
+  final List<Produk> barang;
+  CustomBtmAppBar({super.key, required this.totalDuit, required this.barang});
 
   @override
   State<CustomBtmAppBar> createState() => _CustomBtmAppBarState();
@@ -19,6 +22,11 @@ class _CustomBtmAppBarState extends State<CustomBtmAppBar> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     double scaleFactor = width / 375;
+    return customBtmAppBar(height, scaleFactor, context);
+  }
+
+  BottomAppBar customBtmAppBar(
+      double height, double scaleFactor, BuildContext context) {
     return BottomAppBar(
       height: height * 0.18,
       elevation: 10.0,
@@ -46,16 +54,76 @@ class _CustomBtmAppBarState extends State<CustomBtmAppBar> {
               ],
             ),
             SizedBox(
-              width: 150,
-              height: 25,
+              width: 40 * scaleFactor,
+              height: 10 * scaleFactor,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0 * scaleFactor),
+                    side: BorderSide(
+                        color: LightTheme.primacCyan, width: 0.5 * scaleFactor),
+                  ),
+                  backgroundColor: LightTheme.primacCyan,
+                  shadowColor: Colors.transparent,
+                ),
                 onPressed: () async {
-                  dataQuery();
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return DataDialog(
+                        scaleFactor: scaleFactor,
+                      );
+                    },
+                  );
                 },
-                child: const Text('Cek Barang'),
+                child: Text(
+                  'Daftar Barang',
+                  style: HeadLine(3 * scaleFactor, LightTheme.themeWhite)
+                      .regularStyle,
+                ),
               ),
             ),
-            Text('To Payment'),
+            SizedBox(
+              width: 50 * scaleFactor,
+              height: 15 * scaleFactor,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0 * scaleFactor),
+                    side: BorderSide(
+                        color: LightTheme.primacCyan, width: 0.5 * scaleFactor),
+                  ),
+                  backgroundColor: LightTheme.primacCyan,
+                  shadowColor: Colors.transparent,
+                ),
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReviewPage(
+                        barang: widget.barang,
+                        totalDuit: widget.totalDuit,
+                      ),
+                    ),
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'CHECKOUT',
+                      style: HeadLine(5 * scaleFactor, LightTheme.themeWhite)
+                          .boldStyle,
+                    ),
+                    Icon(
+                      Icons.attach_money_outlined,
+                      size: 6 * scaleFactor,
+                      color: LightTheme.themeWhite,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
