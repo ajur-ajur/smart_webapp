@@ -84,7 +84,6 @@ class _ReviewPageState extends State<ReviewPage> {
   Future<void> sendPostRequest() async {
     const String url = 'http://localhost:8080/createTransaction';
 
-    // Replace with your transaction_details data
     final Map<String, dynamic> transactionDetails = {
       'order_id': 'your_order_id',
       'gross_amount': 200000,
