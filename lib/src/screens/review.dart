@@ -3,20 +3,43 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_webapp/main.dart';
 import 'package:smart_webapp/src/functions/dash_listbuild.dart';
+import 'package:smart_webapp/src/functions/login_info.dart';
+import 'package:smart_webapp/src/functions/wait_transaction.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 
 class ReviewPage extends StatefulWidget {
   final double totalDuit;
   final List<Produk> barang;
+  final List<Pengguna> pengguna;
 
-  const ReviewPage({super.key, required this.barang, required this.totalDuit});
+  const ReviewPage(
+      {super.key,
+      required this.barang,
+      required this.totalDuit,
+      required this.pengguna});
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
 }
 
 class _ReviewPageState extends State<ReviewPage> {
+  late Map<String, dynamic> jsonData;
+  late List<Pengguna> pengguna;
+  late String token;
+  late String globalId;
+  final String url = 'https://app.sandbox.midtrans.com/snap/v3/redirection/';
+  late String urlToken;
+  late Uri finalurl;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeJsonData();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -54,9 +77,32 @@ class _ReviewPageState extends State<ReviewPage> {
                   backgroundColor: LightTheme.primacCyan,
                   shadowColor: Colors.transparent,
                 ),
-                // Tempat API Payment
                 onPressed: () async {
-                  sendPostRequest();
+                  try {
+                    String token = await sendTransaction();
+                    logger.i('Token at button: $token');
+
+                    urlToken = url + token;
+                    final Uri finalurl = Uri.parse(urlToken);
+
+                    logger.i(finalurl);
+
+                    launch(finalurl, isNewTab: true);
+                    if (!context.mounted) return;
+                  } catch (e) {
+                    logger.e('Error: $e');
+                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WaitTransaction(
+                        globalId: globalId,
+                        barang: widget.barang,
+                        pengguna: widget.pengguna,
+                        jsonData: jsonData,
+                      ),
+                    ),
+                  );
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,30 +127,54 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Future<void> sendPostRequest() async {
-    const String url = 'http://localhost:8080/createTransaction';
+  Future<void> launch(Uri url, {bool isNewTab = true}) async {
+    await launchUrl(
+      url,
+      webOnlyWindowName: isNewTab ? '_blank' : '_self',
+    );
+  }
 
-    final Map<String, dynamic> transactionDetails = {
-      'order_id': 'your_order_id',
-      'gross_amount': 200000,
+  void initializeJsonData() {
+    var uuid = const Uuid();
+    var id = uuid.v1();
+    globalId = id;
+    jsonData = {
+      "order_id": id,
+      "gross_amount": widget.totalDuit,
+      "first_name":
+          widget.pengguna.map((pengguna) => pengguna.namaDepan).join(", "),
+      "last_name":
+          widget.pengguna.map((pengguna) => pengguna.namaBelakang).join(", "),
+      "email": "test@gmail.com",
+      "phone": "08776565565",
+      "address": "Jalan Jalan 123",
+      "postal_code":
+          widget.pengguna.isNotEmpty ? widget.pengguna[0].kodePos : null,
+      "city": widget.pengguna.map((pengguna) => pengguna.kota).join(", "),
     };
+    logger.i(id);
+  }
 
-    try {
-      final http.Response response = await http.post(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(transactionDetails),
-      );
+  sendTransaction() async {
+    final url = Uri.parse('http://localhost:5000/transaction');
+    final response = await http.post(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(jsonData),
+    );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        logger.i('Redirect URL: ${data['redirectUrl']}');
-      } else {
-        logger.e(
-            'Failed to create transaction. Status code: ${response.statusCode}');
-      }
-    } catch (error) {
-      logger.e('Error: $error');
+    if (response.statusCode == 200) {
+      logger.i('Transaction success');
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      String token = jsonResponse['token'];
+      logger.i('Token received: $token');
+      return token;
+    } else {
+      logger.e('Transaction failed. Status code: ${response.statusCode}');
+      return;
     }
   }
 }

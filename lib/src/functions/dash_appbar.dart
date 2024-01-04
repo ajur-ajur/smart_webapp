@@ -29,16 +29,12 @@ class CustomAppbar extends StatelessWidget implements PreferredSize {
       leading: GestureDetector(
         onTap: () {
           Scaffold.of(context).openDrawer();
-          // print('tapped');
         },
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: CircleAvatar(
             backgroundColor: LightTheme.primacCyan,
             radius: 150 * scaleFactor,
-            // child: Image.asset(
-            //   'assets/images/quebag.png',
-            // ),
             child: Icon(
               Icons.person_2_outlined,
               color: LightTheme.themeWhite,

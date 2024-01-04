@@ -22,28 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   String? errorMessage = '';
   bool isLogin = false;
 
-  Future<void> signInWithEmailAndPassword() async {
-    try {
-      await Auth().signInWithEmailPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      isLogin = true;
-      // print(isLogin);
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-        // print(errorMessage);
-      });
-      isLogin = false;
-      // print(isLogin);
-    }
-  }
-
-  //Kalau ini buat tombol yang ngeliat password
   bool obscureText = true;
-
-  //Kalau ini pas gagal login (dialog popupnya beda)
   bool failedAttempt = false;
   late double scaleFactor;
 
@@ -251,6 +230,24 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ],
     );
+  }
+
+  Future<void> signInWithEmailAndPassword() async {
+    try {
+      await Auth().signInWithEmailPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      isLogin = true;
+      // print(isLogin);
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+        // print(errorMessage);
+      });
+      isLogin = false;
+      // print(isLogin);
+    }
   }
 
   void loginMethod() async {

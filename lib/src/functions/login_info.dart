@@ -10,16 +10,23 @@ class Pengguna {
   final String namaLengkap;
   final String username;
   final String kota;
-  final String kodePos;
+  final int kodePos;
 
-  Pengguna(
-      {required this.email,
-      required this.namaBelakang,
-      required this.namaDepan,
-      required this.namaLengkap,
-      required this.username,
-      required this.kota,
-      required this.kodePos});
+  Pengguna({
+    required this.email,
+    required this.namaBelakang,
+    required this.namaDepan,
+    required this.namaLengkap,
+    required this.username,
+    required this.kota,
+    required this.kodePos,
+  });
+
+  @override
+  String toString() {
+    return 'User{email: $email, namaBelakang: $namaBelakang, namaDepan: $namaDepan, '
+        'namaLengkap: $namaLengkap, username: $username, kota: $kota, kodePos: $kodePos}';
+  }
 }
 
 class InfoQuery {

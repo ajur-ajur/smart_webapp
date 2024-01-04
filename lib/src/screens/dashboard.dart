@@ -58,6 +58,7 @@ class _DashboardState extends State<Dashboard> {
       bottomNavigationBar: CustomBtmAppBar(
         totalDuit: hitungDuit(),
         barang: barang,
+        pengguna: widget.pengguna,
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: LightTheme.primacCyan,
@@ -156,7 +157,6 @@ class _DashboardState extends State<Dashboard> {
             kode: documentSnapshot.id,
             nama: data['Nama'],
             harga: data['Harga'],
-            qty: 1,
           );
         },
       ).toList();

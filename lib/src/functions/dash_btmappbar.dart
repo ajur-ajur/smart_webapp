@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_webapp/src/functions/dash_listbuild.dart';
 import 'package:smart_webapp/src/functions/data_query.dart';
+import 'package:smart_webapp/src/functions/login_info.dart';
 import 'package:smart_webapp/src/screens/review.dart';
 import 'package:smart_webapp/src/settings/color_theme.dart';
 import 'package:smart_webapp/src/settings/font_theme.dart';
@@ -10,7 +11,12 @@ import 'package:smart_webapp/src/settings/font_theme.dart';
 class CustomBtmAppBar extends StatefulWidget {
   double totalDuit;
   final List<Produk> barang;
-  CustomBtmAppBar({super.key, required this.totalDuit, required this.barang});
+  final List<Pengguna> pengguna;
+  CustomBtmAppBar(
+      {super.key,
+      required this.totalDuit,
+      required this.barang,
+      required this.pengguna});
 
   @override
   State<CustomBtmAppBar> createState() => _CustomBtmAppBarState();
@@ -103,6 +109,7 @@ class _CustomBtmAppBarState extends State<CustomBtmAppBar> {
                       builder: (context) => ReviewPage(
                         barang: widget.barang,
                         totalDuit: widget.totalDuit,
+                        pengguna: widget.pengguna,
                       ),
                     ),
                   );

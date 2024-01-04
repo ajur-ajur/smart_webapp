@@ -6,13 +6,25 @@ class Produk {
   final String nama;
   final double harga;
   final String kode;
-  int qty;
 
-  Produk(
-      {required this.nama,
-      required this.harga,
-      required this.kode,
-      required this.qty});
+  Produk({
+    required this.nama,
+    required this.harga,
+    required this.kode,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'nama': nama,
+      'harga': harga,
+      'kode': kode,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'Produk{nama: $nama, harga: $harga, kode: $kode}';
+  }
 }
 
 class ListProduk extends StatefulWidget {
